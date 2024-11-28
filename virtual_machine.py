@@ -14,7 +14,7 @@ while True:
   try:
     video_shape_req = requests.get(f'{main_machine_ip}/video_shape')
     video_shape = VideoShape(**video_shape_req.json())
-    print(f'{video_shape=}')
+    print(f'video_shape={video_shape}')
     with pyvirtualcam.Camera(width=video_shape.width, height=video_shape.height, fps=20) as cam:
       print(f'Using virtual camera: {cam.device}')
 
