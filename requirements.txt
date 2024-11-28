@@ -1,6 +1,6 @@
-cv2_enumerate_cameras~=1.1.17
-pydantic~=1.10.18
-opencv-python~=4.10.0.84
-numpy~=2.0.0
-pyvirtualcam~=0.12.0
-requests~=2.32.3
+cv2_enumerate_cameras
+pydantic
+opencv-python
+numpy
+pyvirtualcam
+requests
