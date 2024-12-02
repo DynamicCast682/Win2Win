@@ -28,7 +28,8 @@ while True:
     video_shape = VideoShape(**video_shape_req.json())
     print(f'video_shape={video_shape}')
     with pyvirtualcam.Camera(width=video_shape.width, height=video_shape.height, fps=20,
-                             device=) as cam:
+                             device=device,
+                             backend=backend) as cam:
       print(f'Using virtual camera: {cam.device}')
 
       while True:
