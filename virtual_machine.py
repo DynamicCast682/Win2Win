@@ -11,7 +11,7 @@ from models import VideoShape
 
 load_dotenv()
 if os.environ["vmachine"] == 'YES':
-  main_machine_ip = "http://0.0.0.0:8960"
+  main_machine_ip = "http://192.168.1.100:8960"
 else:
   main_machine_ip = "http://127.0.0.1:8960"
 
