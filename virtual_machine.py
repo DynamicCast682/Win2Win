@@ -1,12 +1,19 @@
+import os
 import time
 
 import numpy as np
 import pyvirtualcam
 import requests
+from dotenv import load_dotenv
 
 from models import VideoShape
 
-main_machine_ip = "http://127.0.0.1:8960"
+
+load_dotenv()
+if os.environ["vmachine"] == 'YES':
+  main_machine_ip = "http://0.0.0.0:8960"
+else:
+  main_machine_ip = "http://127.0.0.1:8960"
 
 
 
