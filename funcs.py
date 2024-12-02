@@ -8,3 +8,4 @@ def get_device(search: str):
     if search in camera_info.name:
       index, backend = camera_info.index, camera_info.backend
       return index, backend
+  return None, None
