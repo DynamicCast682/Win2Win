@@ -3,8 +3,11 @@ import socket
 import cv2 as opencv
 import uvicorn
 from fastapi import FastAPI
+import keyboard
 
-from funcs import get_device
+from Effects.FrameManipulation import FrameManipulation
+from Effects.Switch import Switch
+from funcs import get_device, SocketFrame, VideoStream
 from models import VideoShape
 
 index, backend = get_device('OBS')
@@ -19,28 +22,32 @@ server_socket.bind(('0.0.0.0', 1684))
 server_socket.listen(1)
 print('Сервер ожидает подключения...')
 
+
 while True:
   try:
     conn, addr = server_socket.accept()
     print(f'Подключено к {addr}')
 
-    frame = video.read()[1]
-    width, height = frame.shape[1], frame.shape[0]
-    conn.sendall(width.to_bytes(4, byteorder='big'))
-    conn.sendall(height.to_bytes(4, byteorder='big'))
+    vs = VideoStream(video, conn)
+    fm = FrameManipulation(vs)
+    switch = Switch(vs)
 
-    while True:
-      ret, frame = video.read()
-      if not ret:
-        break
+    vs.send_shape()
 
-      # Преобразование изображения в байты
-      data = frame.tobytes()
-      size = len(data)
+    for vs_frame in vs:
+      # if keyboard.is_pressed('ctrl+shift'):
+      #   for switch_frame in switch:
+      #     switch_frame.send()
+      #   continue
 
-      # Отправка размера изображения
-      conn.sendall(size.to_bytes(4, byteorder='big'))
-      conn.sendall(data)
+      fm.frame = vs_frame
+
+      fm.random_lags()
+      fm.random_lowquality()
+
+      fm.send()
+
+
   except Exception as e:
     print(e)
     print('Client disconnected')
