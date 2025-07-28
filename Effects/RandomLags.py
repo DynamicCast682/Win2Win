@@ -18,7 +18,7 @@ class Active:
   def is_active(self):
     if self.start_time is None or self.end_time is None:
       return False
-    return datetime.datetime.now() > self.end_time
+    return datetime.datetime.now() < self.end_time
 
   def activate(self):
     self.start_time = datetime.datetime.now()
