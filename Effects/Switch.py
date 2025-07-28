@@ -20,7 +20,7 @@ class Switch(SwitchLags, NormalCamera):
                vs: VideoStream):
     self.vs = vs
 
-    SwitchLags.__init__(self, vs.width, vs.height, self.pics_count)
+    SwitchLags.__init__(self, vs, self.pics_count)
 
     self.last_frame = self.frame.copy()
     self.iteration = 0

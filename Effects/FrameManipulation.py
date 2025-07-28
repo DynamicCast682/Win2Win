@@ -12,8 +12,8 @@ from funcs import SocketFrame, VideoStream
 
 class FrameManipulation:
   def __init__(self, vs: VideoStream):
-    self.frame: Optional[SocketFrame] = None
-    self.data = self.frame.data
+    self.vs = vs
+    self.frame: Optional[SocketFrame] = vs.get()
     self.default_width = vs.width
     self.default_height = vs.height
 
@@ -30,8 +30,8 @@ class FrameManipulation:
     ...
 
   def lowquality(self) -> SocketFrame:
-    width, height = self.data.shape[1] // 4, self.data.shape[0] // 4
-    low_res_frame = cv2.resize(self.data, (width, height), interpolation=cv2.INTER_LINEAR)
+    width, height = self.frame.data.shape[1] // 4, self.frame.data.shape[0] // 4
+    low_res_frame = cv2.resize(self.frame.data, (width, height), interpolation=cv2.INTER_LINEAR)
 
     # Повышение уровня сжатия
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 10]  # 10 - очень низкое качество
@@ -44,12 +44,12 @@ class FrameManipulation:
     low_quality_frame = cv2.resize(low_quality_frame,
                                    (self.default_width, self.default_height),
                                    interpolation=cv2.INTER_LINEAR)
-    return SocketFrame(low_quality_frame, self.vs_frame.conn)
+    return SocketFrame(low_quality_frame, self.frame.conn)
 
 
 class SwitchLags(FrameManipulation):
-  def __init__(self, width: int, height: int, pics_count2switch: int):
-    FrameManipulation.__init__(self, width, height)
+  def __init__(self, vs: VideoStream, pics_count2switch: int):
+    super().__init__(vs)
     self.pics_count2switch = pics_count2switch
     self.pics_part_to_lag = int(self.pics_count2switch / 4)
     self.start_lags = self.pics_part_to_lag
